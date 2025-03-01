@@ -6,6 +6,11 @@
 --%>
 
 
+
+<%@page import="java.time.format.DateTimeFormatter"%>
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="java.time.LocalDate"%>
+<%@page import="java.time.Year"%>
 <%@page import="com.mirc.serialNumber.DatabaseHelper"%>
 <%@page import="com.mirc.serialNumber.Factory"%>
 <%@page import="com.mirc.serialNumber.User"%>
@@ -25,9 +30,12 @@
                 String emailNew = "";
                 emailNew = (String)session.getAttribute("U_useremail");
                 String factoryCodeAdmin = "";
+                String hideStartingNumber = "";
                 if(logUserLevel!=null && logUserLevel.equals("9")) {
                     factoryCode = (String)request.getParameter("factoryCodeAdmin");
                     session.setAttribute("factoryCode", factoryCode);
+                } else {
+                    hideStartingNumber = "readOnly";
                 }
             %>           
             
@@ -35,7 +43,7 @@
                 <table class="table">
                     <thead>                        
                     </thead>
-                    <tbody>
+                    <tbody>                        
                         <tr>                            
                             <div class="mb-3">
                                 <td>
@@ -80,11 +88,23 @@
                                         }
                                         yearList.add(temp);
 
-                                    }                  
+                                    }
+                                    LocalDate today = LocalDate.now();
+                                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MMM dd yyyy");
+                                    String todayStr = today.format(dtf);
+                                    String currentYearStr = todayStr.substring(todayStr.length()-2, todayStr.length());
+                                    String currentMonthStr = todayStr.substring(0, 3);
+                                    String selectedValueStr = "";
                                     for(int x = 0; x < yearList.size(); x++) {
-                                        String year = yearList.get(x);
+                                    String year = yearList.get(x);
+                                    if(currentYearStr.equals(year)) {
+                                        selectedValueStr = "selected";
+                                    } else {
+                                        selectedValueStr="";
+                                    }
+                                        
                                 %>
-                                    <option value="<%=year%>"><%=year%></option>
+                                    <option value="<%=year%>" <%=selectedValueStr%>><%=year%></option>
                                 <%
                                     }
                                 %>
@@ -101,8 +121,8 @@
                                 <select class="form-select" id="select-model" name="month" >
                                 <option selected>Month</option>
                                 <%
-                                    ArrayList<String> monthList = new ArrayList<String>();
-                                    ArrayList<String> monthName = new ArrayList<String>();
+                                    ArrayList<String> monthList = new ArrayList<>();
+                                    ArrayList<String> monthName = new ArrayList<>();
                                     monthList.add("A");monthName.add("Jan");
                                     monthList.add("B");monthName.add("Feb");
                                     monthList.add("C");monthName.add("Mar");
@@ -114,13 +134,19 @@
                                     monthList.add("I");monthName.add("Sep");
                                     monthList.add("J");monthName.add("Oct");
                                     monthList.add("K");monthName.add("Nov");
-                                    monthList.add("L");monthName.add("Dec");
+                                    monthList.add("L");monthName.add("Dec");              
 
+                                    
                                     for(int x = 0; x < monthList.size(); x++) {
                                         String month = monthList.get(x);
                                         String month_name = monthName.get(x);
+                                        if(month_name.equals(currentMonthStr)) {
+                                            selectedValueStr = "selected";
+                                        } else {
+                                            selectedValueStr = "";
+                                        }
                                         %>
-                                        <option value="<%=month%>"><%=month_name%></option>
+                                        <option value="<%=month%>" <%=selectedValueStr%>><%=month_name%></option>
                                         <%
                                     }
                                 %>
@@ -135,7 +161,7 @@
                                     <label for="exampleInputEmail1" class="form-label">Starting Serial Number</label>
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control" id="serialNumber" name="serialNumber">
+                                    <input type="text" class="form-control" id="serialNumber" name="serialNumber" <%=hideStartingNumber%>>
                                 </td>
                             </div>
                         </tr>
@@ -193,9 +219,9 @@
         http.onload = function() {
             document.getElementById("serialNumber").value = http.responseText;
         };
-        if(userType === "1") {
-            document.getElementById("serialNumber").readOnly = true;
-        }
+//        if(userType === "1") {
+//            document.getElementById("serialNumber").readOnly = true;
+//        }
     }
     
     function setFactoryEmail(){
