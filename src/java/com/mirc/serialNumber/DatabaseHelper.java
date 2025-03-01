@@ -275,5 +275,42 @@ public class DatabaseHelper {
         return retValue;
         
     }
+    
+    public String getStartingSerialNumber(String modelNumber, String factoryCode){
+        String retValue = ""; 
+        try {
+            ResultSet resultset;
+            String queryString = "SELECT * FROM model WHERE modelNumber='" + modelNumber + "'AND factorycode='" + factoryCode +"'";
+            resultset = stmt.executeQuery(queryString);
+
+            while (resultset.next()) {
+                retValue = resultset.getString(3);
+            }
+            stmt.close();
+            conn.close();
+        } catch (SQLException ex) {
+            System.out.println("Error System Error");
+        }
+        return retValue;        
+    }
+    
+    public String getFactoryCodeForfactoryEmail(String factoryEmail){
+        String retValue = ""; 
+        try {
+            ResultSet resultset;
+            String queryString = "SELECT * FROM factory WHERE factory_email='" + factoryEmail + "'";
+            resultset = stmt.executeQuery(queryString);
+
+            while (resultset.next()) {
+                retValue = resultset.getString(2);
+            }
+            stmt.close();
+            conn.close();
+        } catch (SQLException ex) {
+            System.out.println("Error System Error");
+        }
+        return retValue;        
+    }
+    
 }
 

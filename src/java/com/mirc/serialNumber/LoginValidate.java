@@ -64,12 +64,28 @@ public class LoginValidate extends HttpServlet {
                 }
             }
         }
+        
+        String factoryName = "";
+        String factoryCode = "";
+        if(err == 0) {
+            DatabaseHelper db = new DatabaseHelper();
+            ArrayList<Factory> factories = db.getAllFactory();
+            for(int f = 0; f<factories.size(); f++) {
+                if(factories.get(f).getFactoryEmail().equals(usrEmail))
+                {
+                    factoryName = factories.get(f).getFactoryName();
+                    factoryCode = factories.get(f).getFactoryCode();
+                }
+            }
+        }
 
         if (err == 0) {
             String idData = "Suresh";
             session.setAttribute("u_name", idData);
             session.setAttribute("u_userlevel", userLevel);
             session.setAttribute("U_useremail", usrEmail);
+            session.setAttribute("factoryName", factoryName);
+            session.setAttribute("factoryCode", factoryCode);
             session.setMaxInactiveInterval(300);
 
             ServletContext sc = this.getServletContext();

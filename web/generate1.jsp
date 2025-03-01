@@ -18,20 +18,17 @@
         <div class="col-md-8">
             <%
                 session = request.getSession();
-                String factoryName = "";
-                factoryName = (String)session.getAttribute("factoryName");
-                String factoryCode = "";
-                factoryCode = (String)session.getAttribute("factoryCode");
-                String emailNew = "";
-                emailNew = (String)session.getAttribute("U_useremail");
-                String factoryCodeAdmin = "";
-                if(logUserLevel!=null && logUserLevel.equals("9")) {
-                    factoryCode = (String)request.getParameter("factoryCodeAdmin");
-                    session.setAttribute("factoryCode", factoryCode);
+                String factoryName = (String)session.getAttribute("factoryName");
+                String emailNew = (String)session.getAttribute("U_useremail");
+                String factoryNameAdmin = "";
+                if(logUserLevel!=null && logUserLevel.equals("9"))
+                    factoryName = (String)request.getAttribute("factoryNameAdmin");
+                    session.setAttribute("factoryName", factoryName);
                 }
-            %>           
+            %>
             
-            <form action = "generateForm.jsp" method = "POST">    
+            
+            <form action = "generateForm.jsp" method = "POST">    <!-- was generateDecide.jsp -->
                 <table class="table">
                     <thead>                        
                     </thead>
@@ -48,14 +45,30 @@
                                         DatabaseHelper db = new DatabaseHelper();
                                         ArrayList<Model> models = db.getAllModel();
                                         String startingNumber = "";
-                                        String model = "";                           
-                                        db = new DatabaseHelper();
-                                        for(int b=0; b<models.size(); b++) {
-                                            if(models.get(b).getFactoryCode().equals(factoryCode)){
-                                                model = models.get(b).getModelNumber();
-                                            %>    
-                                                <option value="<%=model%>"><%=model%></option>
-                                            <%                                        
+                                        String model = "";
+                                        if(logUserLevel!=null && logUserLevel.equals("9")){
+                                            for(int f=0; f<models.size();f++){
+                                                model = models.get(f).getModelNumber();
+                                                startingNumber = models.get(f).getStartingSerialNumber();
+                                                %>    
+                                                    <option value="<%=model%>"><%=model%></option>
+                                                <% 
+                                            }                                
+                                        } else {                            
+                                            db = new DatabaseHelper();
+                                            ArrayList<Factory> factories = db.getAllFactory();
+                                            for(int a=0; a<factories.size(); a++){
+                                                if(factories.get(a).getFactoryEmail().equals(emailNew)){
+                                                    for(int b=0; b<models.size(); b++) {
+                                                        if(models.get(b).getFactoryCode().equals(factories.get(a).getFactoryCode())){
+                                                            model = models.get(b).getModelNumber();
+                                                            startingNumber = models.get(b).getStartingSerialNumber();
+                                                        %>    
+                                                            <option value="<%=model%>"><%=model%></option>
+                                                        <%                                        
+                                                        }
+                                                    }
+                                                }
                                             }
                                         }
                                     %>                       
@@ -135,7 +148,18 @@
                                     <label for="exampleInputEmail1" class="form-label">Starting Serial Number</label>
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control" id="serialNumber" name="serialNumber">
+                                <%    
+                                    if(logUserLevel.equals("9")) {
+                                        %>
+                                            <input type="text" class="form-control" id="serialNumber" name="serialNumber" >
+                                        <%
+                                    } 
+                                    if(logUserLevel.equals("1")) {
+                                        %>
+                                            <input type="text" class="form-control" id="serialNumber" name="serialNumber" readonly >
+                                        <%
+                                    }                                
+                                %>
                                 </td>
                             </div>
                         </tr>
@@ -182,20 +206,19 @@
     //document.getElementById("userEmail").innerText = "enter your email";
     function displayStartingNumber(){
         let modelName = document.querySelector('#modelName').value;
-        let userType = "<%=logUserLevel%>";
-        //console.log(userType);
-        let factoryUserCode = "<%=factoryCode%>";
+        let factoryUserEmail = "<%=emailNew%>";
+        //console.log('Model Name = '+ modelName + " / "+ 'Factory = ' + factoryUserEmail);
         let http = new XMLHttpRequest();
         http.open("POST", "http://localhost:8080/MircSerialNumberWeb/getStartingSerialNumber.jsp", true);
         http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        let params = "modelName=" + modelName +"&factoryUserCode="+factoryUserCode;
+        let params = "modelName=" + modelName +"&factoryUserEmail="+factoryUserEmail;
         http.send(params);
+        //let startingSerialNumberReceived = (String)http.responseText;
         http.onload = function() {
+            //console.log(http.responseText);
             document.getElementById("serialNumber").value = http.responseText;
         };
-        if(userType === "1") {
-            document.getElementById("serialNumber").readOnly = true;
-        }
+//        document.getElementById("serialNumber").value = startingSerialNumberReceived;        
     }
     
     function setFactoryEmail(){

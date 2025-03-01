@@ -70,3 +70,5 @@
         </div>
     </div>
 </main>
+            
+<%@ include file = "footer.jsp" %>

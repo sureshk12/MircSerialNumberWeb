@@ -20,13 +20,13 @@
         if (msg != null) {
             if(msg.substring(0, 5).equals("ERROR")) {
     %>
-                <div class="alert alert-danger" role=alert">
+                <div class="alert alert-danger" role="alert">
                     <% out.print(msg);%>
                 </div>
     <%                  
             } else {
     %>
-                <div class="alert alert-success" role=alert">
+                <div class="alert alert-success" role="alert">
                     <% out.print(msg);%>
                 </div>
     <%                

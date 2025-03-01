@@ -16,14 +16,14 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
         <!-- Bootstrap CSS -->        
-        <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <link rel="stylesheet" type="text/css" href="static/css/main.css">
 
         <%                                       
             String [] urlStr = { 
                 "index.jsp?title=0",
-                "generate.jsp?title=1",
+                "decideUserAdmin.jsp?title=1",
                 "validateForm.jsp?title=2",
                 "factoryForm.jsp?title=3",
                 "modelNumberForm.jsp?title=4",
@@ -54,7 +54,7 @@
                     titleStr[s]= "";
                 } 
                 urlStr[0] = "index.jsp?title=0";
-                urlStr[1] = "generate.jsp?title=1";
+                urlStr[1] = "decideUserAdmin.jsp?title=1";
                 urlStr[2] = "about.jsp?title=2";
                 titleStr[0] = "Home";
                 titleStr[1] = "Generate";
@@ -102,9 +102,9 @@
                                 <div class="navbar-nav mr-auto">
                                     <%
                                         for(int i = 0; i < urlStr.length; i++) {
-                                            %>
-                                                <a class="nav-item nav-link" href=<%out.print(urlStr[i] + ">" + titleStr[i]);%></a>
-                                            <%
+                                        %>
+                                            <a class="nav-item nav-link" href=<%=urlStr[i]%>><%=titleStr[i]%></a>
+                                        <%
                                         }
                                     %>
                                 </div>                               
@@ -126,7 +126,7 @@
                 <main role="main" class="container">
                     <div class="row">
                         <div class="col-md-8">
-                            <div class="alert alert-danger" role=alert">
+                            <div class="alert alert-danger" role="alert">
                                 <h5>You have not Logged in, Please log in to use the System</h5>
                             </div>
                         </div>
@@ -136,11 +136,11 @@
                 
                 <% 
 
-            }
+            } else {
         %>
         
         
 
-                
-
-
+     
+        
+        

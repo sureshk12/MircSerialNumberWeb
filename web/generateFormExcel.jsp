@@ -156,7 +156,4 @@
 
 
 
-<%@ include file = "footer.jsp" %>
-
-
 
