@@ -121,8 +121,8 @@
                         String codedString = AESClass.convertStrToValidStr(nStr1, nStr2);
                         //String codedSerialNumber = orgStr + codedString;
                         codedSerialNumber = pNum+codedString+"#"+eNum;
-                        DatabaseHelper db = new DatabaseHelper();
-                        String errorStr = db.createSerialNumber(modelName, eNum, yearMonthFactory, codedString);
+                        //DatabaseHelper db = new DatabaseHelper();
+                        //String errorStr = db.createSerialNumber(modelName, eNum, yearMonthFactory, codedString);
 
                         out.println("<TR>");
                         out.println("<TD><center>" + orgStr +"</center></TD>");

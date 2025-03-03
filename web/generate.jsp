@@ -43,27 +43,32 @@
                 <table class="table">
                     <thead>                        
                     </thead>
-                    <tbody>                        
+                    <tbody>
+                        
                         <tr>                            
-                            <div class="mb-3">
-                                <td>
-                                <label for="exampleInputEmail1" class="form-label">Model</label>
+                            <div class="mb-2">
+                                <td class="col-1">
+                                <label for="exampleInputEmail1" class="form-label">Factory</label>
                                 </td>
-                                <td>
-                                <select class="form-select" id="modelName" name="modelName" onchange="displayStartingNumber()">
-                                    <option selected>Model</option>
+                                <td class="col-3">
+                                <select class="form-select" id="factoryName" name="factoryName" onchange="loadModelName()">
+                                    <option selected>Factory</option>
                                     <%
-                                        DatabaseHelper db = new DatabaseHelper();
-                                        ArrayList<Model> models = db.getAllModel();
-                                        String startingNumber = "";
-                                        String model = "";                           
-                                        db = new DatabaseHelper();
-                                        for(int b=0; b<models.size(); b++) {
-                                            if(models.get(b).getFactoryCode().equals(factoryCode)){
-                                                model = models.get(b).getModelNumber();
-                                            %>    
-                                                <option value="<%=model%>"><%=model%></option>
-                                            <%                                        
+                                        if(logUserLevel.equals("1")) {
+                                        %>
+                                            <option value="<%=factoryCode%>"><%=factoryName%></option>
+                                        <%
+                                        } else {
+                                            DatabaseHelper db = new DatabaseHelper();
+                                            ArrayList<Factory> allFactory = db.getAllFactory();
+                                            String factoryName1 = "";
+                                            String factoryCode1 = "";
+                                            for(int b=0; b<allFactory.size(); b++) {
+                                                factoryName1 = allFactory.get(b).getFactoryName();
+                                                factoryCode1 = allFactory.get(b).getFactoryCode();
+                                                %>    
+                                                <option value="<%=factoryCode1%>" ><%=factoryName1%></option>
+                                                <%                                        
                                             }
                                         }
                                     %>                       
@@ -71,12 +76,42 @@
                                 </td>
                             </div>
                         </tr>
+                        
+                        
+                        
+                        <tr>                            
+                            <div class="mb-2">
+                                <td class="col-1">
+                                <label for="exampleInputEmail1" class="form-label">Model</label>
+                                </td>
+                                <td class="col-3">
+                                <select class="form-select" id="modelName" name="modelName" onchange="displayStartingNumber()">
+                                    <option selected>Model</option>
+                                    <%
+//                                        db = new DatabaseHelper();
+//                                        ArrayList<Model> models = db.getAllModel();
+//                                        String startingNumber = "";
+//                                        String model = "";                           
+//                                        db = new DatabaseHelper();
+//                                        for(int b=0; b<models.size(); b++) {
+//                                            if(models.get(b).getFactoryCode().equals(factoryCode)){
+//                                                model = models.get(b).getModelNumber();
+//                                            %>    
+
+//                                            <%                                        
+//                                            }
+//                                        }
+                                    %>                       
+                                </select>
+                                </td>
+                            </div>
+                        </tr>
                         <tr>
                             <div class="mb-3">
-                                <td>
+                                <td class="col-1">
                                 <label for="exampleInputEmail1" class="form-label">Year</label>
                                 </td>
-                                <td>
+                                <td class="col-3">
                                 <select class="form-select" id="select-model" name="year" >
                                     <option selected>Year</option>
                                 <%
@@ -114,10 +149,10 @@
                         </tr>
                         <tr>
                             <div class="mb-3">
-                                <td>
+                                <td class="col-1">
                                 <label for="exampleInputEmail1" class="form-label">Month</label>
                                 </td>
-                                <td>
+                                <td class="col-3">
                                 <select class="form-select" id="select-model" name="month" >
                                 <option selected>Month</option>
                                 <%
@@ -152,32 +187,31 @@
                                 %>
                                 </select>
                                 </td>
-                                </td>
                             </div>
                         </tr>
                         <tr>
                             <div class="mb-3">
-                                <td>
+                                <td class="col-1">
                                     <label for="exampleInputEmail1" class="form-label">Starting Serial Number</label>
                                 </td>
-                                <td>
+                                <td class="col-3">
                                     <input type="text" class="form-control" id="serialNumber" name="serialNumber" <%=hideStartingNumber%>>
                                 </td>
                             </div>
                         </tr>
                         <tr>
                             <div class="mb-3">
-                                <td>
+                                <td class="col-1">
                                     <label for="exampleInputEmail1" class="form-label">Number Of Device</label>
                                 </td> 
-                                <td>
+                                <td class="col-3">
                                     <input type="text" class="form-control" id="numberOfDevice" name="numberOfDevice" >
                                 </td>
                             </div>
                         </tr>
                         <tr>
                             <div class="mb-3">
-                                <td>
+                                <td class="col-1">
                                     <button type="submit" class="btn btn-primary" name="btnsubmit" value="show">Show</button>
                                 </td>
                                 <td>
@@ -210,7 +244,7 @@
         let modelName = document.querySelector('#modelName').value;
         let userType = "<%=logUserLevel%>";
         //console.log(userType);
-        let factoryUserCode = "<%=factoryCode%>";
+        let factoryUserCode = document.querySelector('#factoryName').value;
         let http = new XMLHttpRequest();
         http.open("POST", "http://localhost:8080/MircSerialNumberWeb/getStartingSerialNumber.jsp", true);
         http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -224,12 +258,48 @@
 //        }
     }
     
-    function setFactoryEmail(){
-        let factoryEmail = document.querySelector('#factoryEmail').value;
-        console.log(factoryEmail);
-        <%
-            emailNew="<script>document.writeln(factoryEmail)</script>";
-        %>
+    function loadModelName(){
+        //$("#modelName").empty();
+        //let modelDropdown = document.getElementById("modelName");        
+        
+        let factoryCode = document.querySelector('#factoryName').value;
+        let userType = "<%=logUserLevel%>";
+        console.log("User Type:"+userType);
+        console.log("Factory Code:"+factoryCode);        
+               
+        let http = new XMLHttpRequest();
+        http.open("POST", "http://localhost:8080/MircSerialNumberWeb/getModelForFactory.jsp", true);
+        http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");        
+        let params = "factoryCode=" + factoryCode;
+        http.send(params);
+        let dataReceived = "";
+        http.onload = function() {
+//            let option1 = document.createElement("option");
+//            option1.text = "Model";
+//            modelDropdown.add(option1, modelDropdown[0]);
+            dataReceived = http.responseText;
+            let model = dataReceived.split(",");
+            model.push("Model");
+            $("#modelName").empty();
+            let modelDropdown = document.getElementById("modelName");
+//            let option = document.createElement("option");
+//            option.text = "Model";
+//            modelDropdown.add(option, modelDropdown[0]);
+            if(dataReceived === "NO DATA,") {
+                
+            } else {                
+                console.log(model);
+                for (let x = 0; x < model.length; x++) {
+                    let option = document.createElement("option");
+                    option.text = model[x];
+                    modelDropdown.add(option, modelDropdown[0]);
+                }
+            }
+            $("#modelName").prop("selectedIndex", 0).val(); 
+        };
+
+        
+
     }
 </script>
 

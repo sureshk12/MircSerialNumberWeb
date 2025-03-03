@@ -23,7 +23,7 @@
         <%                                       
             String [] urlStr = { 
                 "index.jsp?title=0",
-                "decideUserAdmin.jsp?title=1",
+                "generate.jsp?title=1",
                 "validateForm.jsp?title=2",
                 "factoryForm.jsp?title=3",
                 "modelNumberForm.jsp?title=4",
@@ -54,7 +54,7 @@
                     titleStr[s]= "";
                 } 
                 urlStr[0] = "index.jsp?title=0";
-                urlStr[1] = "decideUserAdmin.jsp?title=1";
+                urlStr[1] = "generate.jsp?title=1";
                 urlStr[2] = "about.jsp?title=2";
                 titleStr[0] = "Home";
                 titleStr[1] = "Generate";
